@@ -1,0 +1,12 @@
+{
+	"extends": ["eslint:recommended", "plugin:prettier/recommended"],
+	"plugins": ["jsdoc", "prettier"],
+	"rules": {
+		"no-multiple-empty-lines": [
+			"error",
+			{ "max": 1, "maxEOF": 1, "maxBOF": 1 }
+		],
+		"jsdoc/check-alignment": "error",
+		"jsdoc/check-param-names": "error"
+	}
+}

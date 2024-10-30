@@ -1,0 +1,13 @@
+{
+	"name": "telegram-pools-bot",
+	"version": "1.0.0",
+	"description": "Telegram bot for managing pools",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "node --env-file .env index.js"
+	},
+	"dependencies": {
+		"telegraf": "^4.10.0"
+	}
+}

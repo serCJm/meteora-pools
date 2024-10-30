@@ -1,0 +1,5 @@
+*.env*
+*.txt
+.vscode
+*.code*
+node_modules

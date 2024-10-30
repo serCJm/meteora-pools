@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"checkJs": true,
+		"noEmit": true,
+		"moduleResolution": "nodenext",
+		"module": "NodeNext"
+	},
+	"include": ["src/**/*"]
+}
