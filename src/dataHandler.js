@@ -91,8 +91,9 @@ export function formatResponse(pools) {
 		const [token1, token2] = pool.name.split("-");
 		const token1Name = token1.toUpperCase();
 		const token2Name = token2.toUpperCase();
-		const token1Address = pool.reserve_x || "N/A";
-		const token2Address = pool.reserve_y || "N/A";
+		const tokenName = token1Name === "SOL" ? token2Name : token1Name;
+		const tokenAddress =
+			token1Name === "SOL" ? pool.mint_y : pool.mint_x || "N/A";
 
 		const binStep = pool.bin_step?.toString() || "N/A";
 		const liquidity = Number(pool.liquidity).toFixed(2).toString() || "N/A";
@@ -100,18 +101,20 @@ export function formatResponse(pools) {
 		const volume =
 			Number(pool.trade_volume_24h).toFixed(2).toString() || "N/A";
 
+		const apr = Number(pool.apr).toFixed(2).toString() || "N/A";
+
 		const link = `https://edge.meteora.ag/dlmm/${address}`;
 
 		return (
 			`<b>${index + 1}. <a href="${link}">${name}</a></b>\n` +
 			`Pool: <code>${address}</code>\n` +
-			`${token1Name}: <code>${token1Address}</code>\n` +
-			`${token2Name}: <code>${token2Address}</code>\n` +
+			`$${tokenName}: <code>${tokenAddress}</code>\n` +
 			`Bin Step: ${binStep}\n` +
 			`Liquidity: ${liquidity}\n` +
-			`Fees: ${fee}\n` +
-			`Volume: ${volume}\n\n` +
-			`<a href="https://dexscreener.com/solana/${address}">DexScreener</a> | <a href="https://gmgn.ai/sol/token/${token1Address}">GMGN Token1</a> | <a href="https://gmgn.ai/sol/token/${token2Address}">GMGN Token2</a>\n`
+			`Fees24h: ${fee}\n` +
+			`Volume24h: ${volume}\n\n` +
+			`APR: ${apr}%\n\n` +
+			`<a href="https://dexscreener.com/solana/${address}">DexScreener</a> | <a href="https://gmgn.ai/sol/token/${tokenAddress}">GMGN</a>\n`
 		);
 	});
 }
