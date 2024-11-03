@@ -21,8 +21,10 @@ jobs:
               run: |
                   # SSH into the server and pull the latest changes
                   ssh -o StrictHostKeyChecking=no ${{ env.SERVER }} "
-                    cd meteora-pools &&
-                    git pull origin main &&
-                    npm install &&
-                    pm2 restart meteora
+                  source ~/.nvm/nvm.sh &&
+                  nvm use node &&
+                  cd meteora-pools &&
+                  git pull origin main &&
+                  npm install &&
+                  npm run start:prod
                   "
