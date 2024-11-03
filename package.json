@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "node --env-file .env index.js",
-		"start:prod": "pm2 start 'node --env-file .env index.js' --name meteora"
+		"start:prod": "pm2 restart meteora || pm2 start 'node --env-file .env index.js' --name meteora"
 	},
 	"dependencies": {
 		"got": "^14.4.3",
