@@ -17,18 +17,15 @@ export function startBot(token) {
 			const { sortFields, filterCriteria } = parseCommand(command);
 			const pools = await getDLMMPools();
 
-			const sortedPools = sortPools(pools, sortFields);
-			console.log(sortedPools);
-			const filteredPools = filterPools(sortedPools, filterCriteria);
+			const filteredPools = filterPools(pools, filterCriteria);
 
 			if (filteredPools.length === 0) {
 				ctx.reply("No pools found matching your criteria.");
 				return;
 			}
+			const sortedPools = sortPools(filteredPools, sortFields);
 
-			console.log(filteredPools.slice(0, 10));
-
-			const formattedResponse = formatResponse(filteredPools);
+			const formattedResponse = formatResponse(sortedPools);
 
 			try {
 				const responsesToSend = formattedResponse.slice(0, 10);
