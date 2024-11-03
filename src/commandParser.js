@@ -9,14 +9,19 @@ export function parseCommand(command) {
 	const parts = command.trim().split(" ");
 
 	const sortFields = [];
-	const filterCriteria = {
-		bin_step: { operator: "=", value: 100 },
-		// protocol_fee_percentage: { operator: "=", value: 0 },
-		liquidity: { operator: ">", value: 0 }
+	const filterCriteria = {};
+
+	const defaultFilterCriteria = {
+		bin_step: [{ operator: "=", value: 100 }],
+		protocol_fee_percentage: [{ operator: "=", value: 0 }],
+		liquidity: [{ operator: ">", value: 0 }]
 	};
 
 	if (parts.length === 1 && parts[0] === "") {
 		sortFields.push({ field: "liquidity", order: "desc" });
+		for (const field in defaultFilterCriteria) {
+			filterCriteria[field] = defaultFilterCriteria[field];
+		}
 		return { sortFields, filterCriteria };
 	}
 
@@ -44,6 +49,12 @@ export function parseCommand(command) {
 
 	if (!sortOptionPresent) {
 		sortFields.push({ field: "liquidity", order: "desc" });
+	}
+
+	for (const field in defaultFilterCriteria) {
+		if (!filterCriteria.hasOwnProperty(field)) {
+			filterCriteria[field] = defaultFilterCriteria[field];
+		}
 	}
 
 	return { sortFields, filterCriteria };
@@ -84,7 +95,7 @@ function parseFilterCriterion(part, filterCriteria) {
 		"volume",
 		"apr"
 	];
-	const match = part.match(/^(\w+)([><=]=?|==?)(.+)$/);
+	const match = part.match(/^(\w+)([><]=?|==?)(.+)$/);
 	if (!match) {
 		throw new Error(
 			`Invalid filter format: ${part}. Ensure filters follow "field operator value" format.`
@@ -101,5 +112,8 @@ function parseFilterCriterion(part, filterCriteria) {
 	}
 
 	const parsedValue = isNaN(+value) ? value : parseFloat(value);
-	filterCriteria[field] = { operator, value: parsedValue };
+	if (!filterCriteria[field]) {
+		filterCriteria[field] = [];
+	}
+	filterCriteria[field].push({ operator, value: parsedValue });
 }
