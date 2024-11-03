@@ -30,46 +30,53 @@ export function sortPools(pools, sortFields) {
  * @returns {Array<Object>} - Filtered array of pool objects.
  */
 export function filterPools(pools, filterCriteria) {
-	console.log(filterCriteria);
 	return pools.filter((pool) => {
 		for (const field in filterCriteria) {
 			const mappedField = FIELD_MAPPING[field] || field;
-			const criteria = filterCriteria[field];
+			const criteriaArray = filterCriteria[field];
+			const poolValue = Number(pool[mappedField]);
 
-			let isValid = false;
+			let isValid = true;
 
-			if (
-				typeof criteria === "object" &&
-				criteria.operator &&
-				criteria.value
-			) {
-				const { operator, value } = criteria;
-				const poolValue = Number(pool[mappedField]);
+			for (const criteria of criteriaArray) {
+				let conditionValid = true;
 
-				switch (operator) {
-					case ">":
-						isValid = poolValue > value;
-						break;
-					case "<":
-						isValid = poolValue < value;
-						break;
-					case ">=":
-						isValid = poolValue >= value;
-						break;
-					case "<=":
-						isValid = poolValue <= value;
-						break;
-					case "=":
-						isValid = poolValue === value;
-						break;
-					default:
-						console.warn(`Unknown operator: ${operator}`);
-						isValid = false;
+				if (
+					typeof criteria === "object" &&
+					criteria.operator &&
+					criteria.value !== undefined
+				) {
+					const { operator, value } = criteria;
+
+					switch (operator) {
+						case ">":
+							conditionValid = poolValue > value;
+							break;
+						case "<":
+							conditionValid = poolValue < value;
+							break;
+						case ">=":
+							conditionValid = poolValue >= value;
+							break;
+						case "<=":
+							conditionValid = poolValue <= value;
+							break;
+						case "=":
+						case "==":
+							conditionValid = poolValue === value;
+							break;
+						default:
+							console.warn(`Unknown operator: ${operator}`);
+							conditionValid = false;
+					}
+				} else {
+					conditionValid = pool[mappedField] === criteria;
 				}
-			} else {
-				isValid =
-					pool.hasOwnProperty(mappedField) &&
-					pool[mappedField] === criteria;
+
+				if (!conditionValid) {
+					isValid = false;
+					break;
+				}
 			}
 
 			if (!isValid) return false;
