@@ -8,6 +8,14 @@
 		"start": "node --env-file .env index.js"
 	},
 	"dependencies": {
-		"telegraf": "^4.10.0"
+		"got": "^14.4.3",
+		"telegraf": "^4.16.3"
+	},
+	"devDependencies": {
+		"@types/node": "^22.8.6",
+		"eslint": "^9.14.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-jsdoc": "^50.4.3",
+		"prettier": "^3.3.3"
 	}
 }
