@@ -39,6 +39,8 @@ export async function getDLMMPools() {
 		const solPools = pools.filter((pool) => {
 			return (
 				pool.name.includes("SOL") &&
+				!pool.name.includes("USDC") &&
+				!pool.name.includes("USDT") &&
 				pool.liquidity > 0 &&
 				pool.trade_volume_24h > 0 &&
 				pool.fees_24h > 0
