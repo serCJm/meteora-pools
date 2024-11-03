@@ -13,11 +13,11 @@ jobs:
             - name: Setup SSH
               uses: webfactory/ssh-agent@v0.5.3
               with:
-                  ssh-private-key: ${{ secrets.METEORA_SSH_PRIVATE_KEY }}
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
             - name: Deploy with git pull
               env:
-                  SERVER: "${{ secrets.SSH_METEORA_USER }}@${{ secrets.METEORA_SERVER_IP }}"
+                  SERVER: "${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}"
               run: |
                   # SSH into the server and pull the latest changes
                   ssh ${{ env.SERVER }} "
