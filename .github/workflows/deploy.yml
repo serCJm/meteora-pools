@@ -21,8 +21,8 @@ jobs:
               run: |
                   # SSH into the server and pull the latest changes
                   ssh -o StrictHostKeyChecking=no ${{ env.SERVER }} "
-                    cd /path/to/your/app &&
+                    cd meteora-pools &&
                     git pull origin main &&
                     npm install &&
-                    pm2 restart my_project
+                    pm2 restart meteora
                   "
