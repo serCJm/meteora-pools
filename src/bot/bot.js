@@ -1,4 +1,4 @@
-import { Telegraf } from "telegraf";
+import { bot } from "../api/telegram.js";
 import {
 	helpHandler,
 	poolsHandler,
@@ -6,16 +6,16 @@ import {
 	unsubscribeHandler
 } from "./commandHandlers.js";
 
-/**
- * @param {string} token - Telegram Bot API token.
- */
-export function startBot(token) {
-	const bot = new Telegraf(token);
-
+export async function startBot() {
 	bot.command("pools", poolsHandler);
 	bot.command("subscribe", subscribeHandler);
 	bot.command("unsubscribe", unsubscribeHandler);
 	bot.command("help", helpHandler);
 
-	bot.launch();
+	try {
+		await bot.launch();
+		console.log("Bot started successfully!");
+	} catch (error) {
+		console.error("Error starting bot:", error);
+	}
 }

@@ -1,4 +1,5 @@
 import { getDLMMPools } from "../api/meteora.js";
+import { bot } from "../api/telegram.js";
 import Subscription from "../models/subscription.js";
 import {
 	parsePoolsCommand,
@@ -26,31 +27,57 @@ export async function poolsHandler(ctx) {
 			ctx.reply("No pools found matching your criteria.");
 			return;
 		}
-		const sortedPools = sortPools(filteredPools, sortFields);
-
-		const formattedResponse = formatResponse(sortedPools);
-
-		try {
-			const responsesToSend = formattedResponse.slice(0, 10);
-
-			const chunkSize = 4;
-			for (let i = 0; i < responsesToSend.length; i += chunkSize) {
-				const chunk = responsesToSend.slice(i, i + chunkSize);
-				const message = chunk.join("\n");
-				await ctx.replyWithHTML(message, {
-					disable_web_page_preview: true
-				});
-			}
-		} catch (error) {
-			console.error("Error sending pool information:", error);
-			ctx.reply(
-				"An error occurred while sending the pool information. Please try again later."
-			);
-			return;
-		}
+		await sendChunkedPoolInformation(
+			ctx.chat.id,
+			filteredPools,
+			sortFields
+		);
 	} catch (error) {
 		console.error("Error processing pools:", error);
-		ctx.reply(`Error: ${error.message}`);
+		ctx.reply(`Error getting pools information`);
+	}
+}
+
+/**
+ * Sends a chunked response with pool information to the user.
+ *
+ * Sorts and formats pool data, then sends it to the user in chunks
+ * to avoid exceeding message length limits.  Handles potential errors
+ * during the sending process.
+ *
+ * @param {Number} chatId The chat ID of the user to send the pool information to.
+ * @param {Array<Object>} pools An array of pool objects that match the user's filter criteria.
+ * @param {Array<Object>} sortFields An array of fields to sort the pools by.
+ */
+async function sendChunkedPoolInformation(
+	chatId,
+	pools,
+	sortFields = [{ field: "liquidity", order: "desc" }],
+	itemsToSend = 10
+) {
+	const sortedPools = sortPools(pools, sortFields);
+	const formattedResponse = formatResponse(sortedPools);
+
+	try {
+		const responsesToSend = formattedResponse.slice(0, itemsToSend);
+
+		const chunkSize = 5;
+		for (let i = 0; i < responsesToSend.length; i += chunkSize) {
+			const chunk = responsesToSend.slice(i, i + chunkSize);
+			const message = chunk.join("\n");
+
+			await bot.telegram.sendMessage(chatId, message, {
+				parse_mode: "HTML",
+				// @ts-ignore
+				disable_web_page_preview: true
+			});
+		}
+	} catch (error) {
+		console.error("Error sending pool information:", error);
+		bot.telegram.sendMessage(
+			chatId,
+			"An error occurred while sending the pool information. Please try again later."
+		);
 	}
 }
 
