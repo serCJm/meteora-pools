@@ -5,7 +5,7 @@
  * @returns {object} - An object containing the sort fields and filter criteria.
  * @throws {Error} - If the command is invalid.
  */
-export function parseCommand(command) {
+export function parsePoolsCommand(command) {
 	const parts = command.trim().split(" ");
 
 	const sortFields = [];
@@ -116,4 +116,28 @@ function parseFilterCriterion(part, filterCriteria) {
 		filterCriteria[field] = [];
 	}
 	filterCriteria[field].push({ operator, value: parsedValue });
+}
+
+export function parseSubscriptionCommand(command) {
+	const parts = command.trim().split(" ");
+	const subscriptions = [];
+
+	if (parts.length === 1 && parts[0] === "") {
+		subscriptions.push("newPools");
+		subscriptions.push("increasedVolume");
+		return subscriptions;
+	}
+
+	for (const part of parts) {
+		if (part === "-p") {
+			subscriptions.push("newPools");
+		} else if (part === "-v") {
+			subscriptions.push("increasedVolume");
+		} else {
+			throw new Error(
+				`Unexpected command part: ${part}. Use -s for new pools and -v for increased volume.`
+			);
+		}
+	}
+	return subscriptions;
 }
