@@ -4,12 +4,9 @@ import { startBot } from "./src/bot/bot.js";
 import { fetchVolumeDataAndUpdate } from "./src/volumeTracker.js";
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const BOT_TOKEN = process.env.BOT_TOKEN;
 
-if (!BOT_TOKEN || !MONGODB_URI) {
-	console.error(
-		"Error: BOT_TOKEN or MONGODB_URI environment variable not set."
-	);
+if (!MONGODB_URI) {
+	console.error("Error:  MONGODB_URI environment variable not set.");
 	process.exit(1);
 }
 
@@ -21,11 +18,10 @@ async function start() {
 		await mongoose.connect(MONGODB_URI);
 		console.log("Connected to MongoDB");
 
+		await startBot();
+
 		await fetchVolumeDataAndUpdate();
-
 		cron.schedule("0 * * * *", fetchVolumeDataAndUpdate);
-
-		startBot(BOT_TOKEN);
 	} catch (error) {
 		console.error(error);
 	}
