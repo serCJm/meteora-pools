@@ -41,7 +41,7 @@ export async function getDLMMPools() {
 				pool.name.includes("SOL") &&
 				!pool.name.includes("USDC") &&
 				!pool.name.includes("USDT") &&
-				+pool.liquidity > 0 &&
+				+pool.liquidity > 100 &&
 				pool.trade_volume_24h > 0 &&
 				pool.fees_24h > 0
 			);
