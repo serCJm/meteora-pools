@@ -4,6 +4,7 @@ const FIELD_MAPPING = {
 	volume: "trade_volume_24h",
 	apr: "apr"
 };
+
 export function sortPools(pools, sortFields) {
 	return [...pools].sort((a, b) => {
 		for (const sortField of sortFields) {
@@ -124,4 +125,34 @@ export function formatResponse(pools) {
 			`<a href="https://dexscreener.com/solana/${address}">DexScreener</a> | <a href="https://gmgn.ai/sol/token/${tokenAddress}">GMGN</a>\n`
 		);
 	});
+}
+
+export function recordVolume(pool, volume) {
+	pool.volumeHistory = pool.volumeHistory || [];
+	pool.volumeHistory.push({ timestamp: Date.now(), volume: volume });
+}
+
+export function analyzeVolumeChanges(pool, hours) {
+	if (!pool.volumeHistory) return "No volume history available.";
+	const cutoff = Date.now() - hours * 60 * 60 * 1000;
+	const relevantHistory = pool.volumeHistory.filter(
+		(entry) => entry.timestamp >= cutoff
+	);
+	if (relevantHistory.length < 2) return "Insufficient data for analysis.";
+	const initialVolume = relevantHistory[0].volume;
+	const finalVolume = relevantHistory[relevantHistory.length - 1].volume;
+	const change = finalVolume - initialVolume;
+	const percentageChange = (change / initialVolume) * 100;
+	return `Volume change over ${hours} hours: ${change.toFixed(2)} (${percentageChange.toFixed(2)}%)`;
+}
+
+export async function handlePoolData(pools) {
+	pools.forEach((pool) => recordVolume(pool, pool.trade_volume_24h));
+	const filteredPools = filterPools(pools, {});
+	const formattedResponse = formatResponse(filteredPools);
+	return formattedResponse;
+}
+
+export function getVolumeAnalysis(pool, hours) {
+	return analyzeVolumeChanges(pool, hours);
 }
