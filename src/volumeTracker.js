@@ -52,8 +52,8 @@ async function notifyNewPools(dexDataList) {
 	);
 	const existingPoolAddresses = existingPools.map((pool) => pool.poolAddress);
 
-	const newPools = apiPoolAddresses.filter(
-		(address) => !existingPoolAddresses.includes(address)
+	const newPools = dexDataList.filter(
+		(pool) => !existingPoolAddresses.includes(pool.address)
 	);
 
 	if (newPools.length > 0 && existingPoolAddresses.length > 0) {
@@ -63,7 +63,8 @@ async function notifyNewPools(dexDataList) {
 				subscription.chatId,
 				newPools,
 				[{ field: "liquidity", order: "desc" }],
-				newPools.length
+				newPools.length,
+				`New pools found: ${newPools.length}`
 			);
 		});
 

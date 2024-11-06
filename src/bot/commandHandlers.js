@@ -30,7 +30,9 @@ export async function poolsHandler(ctx) {
 		await sendChunkedPoolInformation(
 			ctx.chat.id,
 			filteredPools,
-			sortFields
+			sortFields,
+			20,
+			"<b>Pools matching your criteria:</b>"
 		);
 	} catch (error) {
 		console.error("Error processing pools:", error);
@@ -53,7 +55,8 @@ export async function sendChunkedPoolInformation(
 	chatId,
 	pools,
 	sortFields = [{ field: "liquidity", order: "desc" }],
-	itemsToSend = 10
+	itemsToSend = 10,
+	header = ""
 ) {
 	const sortedPools = sortPools(pools, sortFields);
 	const formattedResponse = formatResponse(sortedPools);
@@ -64,7 +67,8 @@ export async function sendChunkedPoolInformation(
 		const chunkSize = 5;
 		for (let i = 0; i < responsesToSend.length; i += chunkSize) {
 			const chunk = responsesToSend.slice(i, i + chunkSize);
-			const message = chunk.join("\n");
+			const message =
+				i === 0 ? header + "\n" + chunk.join("\n") : chunk.join("\n");
 
 			await bot.telegram.sendMessage(chatId, message, {
 				parse_mode: "HTML",
