@@ -49,7 +49,7 @@ export async function poolsHandler(ctx) {
  * @param {Array<Object>} pools An array of pool objects that match the user's filter criteria.
  * @param {Array<Object>} sortFields An array of fields to sort the pools by.
  */
-async function sendChunkedPoolInformation(
+export async function sendChunkedPoolInformation(
 	chatId,
 	pools,
 	sortFields = [{ field: "liquidity", order: "desc" }],
