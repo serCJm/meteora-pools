@@ -57,11 +57,7 @@ async function notifyNewPools(dexDataList) {
 		(address) => !existingPoolAddresses.includes(address)
 	);
 
-	if (newPoolAddresses.length > 0) {
-		console.log(
-			`Found ${newPoolAddresses.length} new pool(s):`,
-			newPoolAddresses
-		);
+	if (newPoolAddresses.length > 0 && existingPoolAddresses.length > 0) {
 		const subscriptions = await Subscription.find({ newPools: true });
 		const messages = subscriptions.map((subscription) => {
 			return bot.telegram.sendMessage(
