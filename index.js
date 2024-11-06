@@ -18,7 +18,7 @@ async function start() {
 		await mongoose.connect(MONGODB_URI);
 		console.log("Connected to MongoDB");
 
-		await startBot();
+		startBot();
 
 		await fetchVolumeDataAndUpdate();
 		cron.schedule("0 * * * *", fetchVolumeDataAndUpdate);

@@ -6,16 +6,16 @@ import {
 	unsubscribeHandler
 } from "./commandHandlers.js";
 
-export async function startBot() {
+export function startBot() {
 	bot.command("pools", poolsHandler);
 	bot.command("subscribe", subscribeHandler);
 	bot.command("unsubscribe", unsubscribeHandler);
 	bot.command("help", helpHandler);
 
-	try {
-		await bot.launch();
-		console.log("Bot started successfully!");
-	} catch (error) {
-		console.error("Error starting bot:", error);
-	}
+	bot.launch()
+
+		.catch((error) => {
+			console.error("Error starting bot:", error);
+		});
+	console.log("Bot started successfully.");
 }
