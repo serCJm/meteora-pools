@@ -94,16 +94,18 @@ export async function subscribeHandler(ctx) {
 		const chatId = ctx.chat.id;
 
 		const subscribeTo = parseSubscriptionCommand(
-			ctx.message.text.substring(9)
+			ctx.message.text.substring(10)
 		);
 
-		const subscription = new Subscription({
-			userId,
-			chatId,
-			newPools: subscribeTo.includes("newPools"),
-			increasedVolume: subscribeTo.includes("increasedVolume")
-		});
-		await subscription.save();
+		await Subscription.findOneAndUpdate(
+			{ userId },
+			{
+				chatId,
+				newPools: subscribeTo.includes("newPools"),
+				increasedVolume: subscribeTo.includes("increasedVolume")
+			},
+			{ upsert: true, new: true }
+		);
 		ctx.reply("You have successfully subscribed to notifications.");
 	} catch (error) {
 		console.error("Error in subscribeHandler:", error);
@@ -126,7 +128,7 @@ export async function unsubscribeHandler(ctx) {
 		const chatId = ctx.chat.id;
 
 		const unsubscribeFrom = parseSubscriptionCommand(
-			ctx.message.text.substring(11)
+			ctx.message.text.substring(12)
 		);
 
 		const query = { userId, chatId };
