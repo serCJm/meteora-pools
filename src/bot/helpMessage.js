@@ -26,4 +26,19 @@ export const HELP_MESSAGE = `
 <b>Example Usage</b>:
 /pools <code>-f liquidity&gt;5000 base_fee_percentage&#61;&lt;0.5 -s apr trade_volume_24h</code>
   - Filters for pools with liquidity over 5000 and a base fee percentage of 0.5% or less, then sorts by APR and 24-hour trade volume, both in descending order.
+
+<b>Subscription Commands:</b>
+- To subscribe to notifications, use <code>/subscribe</code>
+- To unsubscribe from notifications, use <code>/unsubscribe</code>
+- Use -p flag to manage subscriptions to new pools
+- Use -v flag to manage subscription to increasing volume
+- Both flags are the default and can be omitted
+
+<b>Example Usage</b>:
+<code>/subscribe</code>
+- Subscribes to both new pools and increased volume notifications.
+<code>/subscribe -p</code>
+- Subscribes to new pools notifications only.
+<code>/unsubscribe  -v</code>
+- Unsubscribes from increased volume notifications only.
 `;
