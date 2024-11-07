@@ -43,7 +43,8 @@ export async function getDLMMPools() {
 				!pool.name.includes("USDT") &&
 				+pool.liquidity > 100 &&
 				pool.trade_volume_24h > 0 &&
-				pool.fees_24h > 0
+				pool.fees_24h > 0 &&
+				pool.apr > 10
 			);
 		});
 
