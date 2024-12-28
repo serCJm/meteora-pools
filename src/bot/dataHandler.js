@@ -1,8 +1,7 @@
 const FIELD_MAPPING = {
 	fees: "fees_24h",
 	liquidity: "liquidity",
-	volume: "trade_volume_24h",
-	apr: "apr"
+	volume: "trade_volume_24h"
 };
 
 export function sortPools(pools, sortFields) {

@@ -13,7 +13,7 @@ export function parsePoolsCommand(command) {
 
 	const defaultFilterCriteria = {
 		bin_step: [{ operator: "=", value: 100 }],
-		protocol_fee_percentage: [{ operator: "=", value: 0 }],
+		// protocol_fee_percentage: [{ operator: "=", value: 0 }],
 		liquidity: [{ operator: ">", value: 0 }]
 	};
 
