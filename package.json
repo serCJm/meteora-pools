@@ -9,7 +9,7 @@
 		"start:prod": "pm2 restart meteora || pm2 start 'node --env-file .env index.js' --name meteora"
 	},
 	"dependencies": {
-		"got": "^14.4.3",
+		"got": "^14.4.5",
 		"mongoose": "^8.8.0",
 		"node-cron": "^3.0.3",
 		"telegraf": "^4.16.3"
