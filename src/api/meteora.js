@@ -33,9 +33,8 @@ import got from "got";
  */
 export async function getDLMMPools() {
 	try {
-		const response = await got("https://dlmm-api.meteora.ag/pair/all");
-		console.log(response);
-		const pools = JSON.parse(response.body);
+		const pools = await got("https://dlmm-api.meteora.ag/pair/all").json();
+		console.log(pools);
 
 		const solPools = pools.filter((pool) => {
 			return (
