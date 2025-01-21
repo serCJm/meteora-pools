@@ -5,6 +5,10 @@ import { fetchVolumeDataAndUpdate } from "./src/volumeTracker.js";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
+process.on("unhandledRejection", (reason, p) => {
+	console.error("Unhandled Rejection at: Promise", p, "reason:", reason);
+});
+
 if (!MONGODB_URI) {
 	console.error("Error:  MONGODB_URI environment variable not set.");
 	process.exit(1);
