@@ -1,4 +1,5 @@
 import got from "got";
+import JSONStream from "JSONStream";
 
 /**
  * Retrieves the list of pools from the API.
@@ -33,24 +34,42 @@ import got from "got";
  */
 export async function getDLMMPools() {
 	try {
-		const pools = await got("https://dlmm-api.meteora.ag/pair/all").json();
-		console.log(pools);
+		const url = "https://dlmm-api.meteora.ag/pair/all";
 
-		const solPools = pools.filter((pool) => {
-			return (
-				pool.name.includes("SOL") &&
-				!pool.name.includes("USDC") &&
-				!pool.name.includes("USDT") &&
-				+pool.liquidity > 100 &&
-				pool.trade_volume_24h > 0 &&
-				pool.fees_24h > 0 &&
-				pool.apr > 10
-			);
-		});
-
+		const solPools = await fetchSolPools(url);
 		return solPools;
 	} catch (error) {
 		console.error("Error fetching pools:", error);
 		return [];
 	}
+}
+
+async function fetchSolPools(url) {
+	const solPools = [];
+
+	return new Promise((resolve, reject) => {
+		got.stream(url)
+			.pipe(JSONStream.parse("*"))
+			.on("data", (pool) => {
+				if (
+					pool.name.includes("SOL") &&
+					!pool.name.includes("USDC") &&
+					!pool.name.includes("USDT") &&
+					+pool.liquidity > 100 &&
+					pool.trade_volume_24h > 0 &&
+					pool.fees_24h > 0 &&
+					pool.apr > 10
+				) {
+					solPools.push(pool);
+				}
+			})
+			.on("end", () => {
+				console.log("Finished processing all data.");
+				resolve(solPools);
+			})
+			.on("error", (err) => {
+				console.error("Error while processing:", err.message);
+				reject(err);
+			});
+	});
 }
