@@ -5,6 +5,7 @@ import Subscription from "./models/subscription.js";
 
 export async function fetchVolumeDataAndUpdate() {
 	try {
+		consloe.log("Fetching DEX data...");
 		const dexDataList = await getDLMMPools();
 
 		await notifyNewPools(dexDataList);
